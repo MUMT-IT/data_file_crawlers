@@ -1,3 +1,4 @@
 requests==2.28.1
 tomli==2.0.1
 pywin32==305
+click==8.1.3
