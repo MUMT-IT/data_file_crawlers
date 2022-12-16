@@ -51,13 +51,13 @@ def main(folder, dry, remote):
                              'name': fn,
                              'create_datetime': create_datetime,
                              'update_datetime': update_datetime,
-                             # 'url': os.path.join(root, fn)
+                             'url': os.path.join(root, fn)
                              }
                 if not dry:
                     if dataset_ref:
-                        resp = requests.post('http://127.0.0.1:5000/data-blueprint/api/v1.0/data-file', json=data_file)
+                        resp = requests.post('https://mumtmis.herokuapp.com/data-blueprint/api/v1.0/data-file', json=data_file)
                         if resp.status_code != 201:
-                            print(resp.json())
+                            print(resp.status_code)
                         else:
                             print(f'Finished uploading {fn}.')
                             print(resp.status_code)
