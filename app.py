@@ -1,11 +1,16 @@
 import requests
 import glob
+import win32wnet
 import os
 import sys
 import tomli
+import click
 
 
-def main(folder):
+@click.command()
+@click.argument('folder')
+@click.option('--dry/--not-dry', default=False)
+def main(folder, dry):
     for root, dirs, filenames in os.walk(folder):
         with open(os.path.join(root, 'info.toml'), 'rb') as fp:
             info = tomli.load(fp)
@@ -21,14 +26,16 @@ def main(folder):
                              'update_datetime': update_datetime,
                              # 'url': os.path.join(root, fn)
                              }
-                resp = requests.post('http://127.0.0.1:5000/data-blueprint/api/v1.0/data-file', json=data_file)
-                if resp.status_code != 201:
-                    print(resp.json())
+                if not dry:
+                    resp = requests.post('http://127.0.0.1:5000/data-blueprint/api/v1.0/data-file', json=data_file)
+                    if resp.status_code != 201:
+                        print(resp.json())
+                    else:
+                        print(f'Finished uploading {fn}.')
+                        print(resp.status_code)
                 else:
-                    print(f'Finished uploading {fn}.')
-                    print(resp.status_code)
+                    print(data_file)
 
 
 if __name__ == '__main__':
-    folder = sys.argv[1]
-    main(folder)
+    main()
